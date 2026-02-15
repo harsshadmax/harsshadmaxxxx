@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="description" content="Create amazing birthday surprises with secret wishes from friends!">
+    <meta name="keywords" content="birthday, surprise, wishes, celebration, party">
+    <meta name="author" content="IKER">
+    <title>Birthday Surprise - Created by IKER</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="sparkles" id="sparkles"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎉 Birthday Surprise 🎂</h1>
+            <p class="subtitle">Create a secret collection of birthday wishes!</p>
+            <button class="admin-login-btn" onclick="openAdminLogin()" id="adminLoginBtn">
+                🔐 Admin Login
+            </button>
+        </div>
+
+        <!-- Main Card -->
+        <div class="card">
+            <!-- Setup Section (Organizer) -->
+            <div class="setup-section" id="setupSection">
+                <h2>✨ Create a Birthday Surprise ✨</h2>
+                <form id="setupForm">
+                    <div class="form-group">
+                        <label>🎂 Birthday Person's Name</label>
+                        <input type="text" id="birthdayPersonName" placeholder="Who's the special person?" required>
+                    </div>
+                    <div class="form-group">
+                        <label>🔐 Your Name (Organizer)</label>
+                        <input type="text" id="organizerName" placeholder="Your name" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        🎊 Create Surprise Page 🎊
+                    </button>
+                </form>
+
+                <div id="linksDisplay" class="links-section hidden">
+                    <div class="link-box" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <h3>✏️ Edit Birthday Person's Name</h3>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <input type="text" id="editBirthdayName" placeholder="Birthday person's name" style="margin-bottom: 10px;">
+                            <button class="btn-copy" style="width: 100%;" onclick="updateBirthdayName()">Update Name</button>
+                        </div>
+                    </div>
+
+                    <div class="link-box">
+                        <h3>📤 Share with Friends (Contribution Link)</h3>
+                        <div class="link-display">
+                            <input type="text" id="contributionLink" readonly>
+                            <button class="btn-copy" onclick="copyLink('contributionLink')">Copy</button>
+                        </div>
+                        <button class="btn-whatsapp" onclick="shareOnWhatsApp('contributionLink')">
+                            <span style="font-size: 1.2rem;">💬</span> Share on WhatsApp
+                        </button>
+                        <p class="info-text">Share this link with friends so they can add messages!</p>
+                    </div>
+
+                    <div class="link-box" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <h3>🎁 Birthday Person Link (Reveal Link)</h3>
+                        <div class="link-display">
+                            <input type="text" id="revealLink" readonly>
+                            <button class="btn-copy" onclick="copyLink('revealLink')">Copy</button>
+                        </div>
+                        <button class="btn-whatsapp" onclick="shareOnWhatsApp('revealLink')">
+                            <span style="font-size: 1.2rem;">💬</span> Share on WhatsApp
+                        </button>
+                        <p class="info-text">Send this to the birthday person on their special day!</p>
+                        <button class="btn-copy" style="width: 100%; margin-top: 10px; background: linear-gradient(135deg, #11998e, #38ef7d);" onclick="regenerateRevealLink()">
+                            🔄 Generate New Reveal Link
+                        </button>
+                    </div>
+
+                    <div class="link-box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <h3>👤 Admin Access (Direct Link)</h3>
+                        <div class="link-display">
+                            <input type="text" id="adminLink" readonly>
+                            <button class="btn-copy" onclick="copyLink('adminLink')">Copy</button>
+                        </div>
+                        <p class="info-text">Direct access to admin panel - no password needed when using this link! Or click the 🔐 Admin Login button and enter password: <strong>king</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contribute Section (Friends) -->
+            <div class="contribute-section" id="contributeSection">
+                <h2>💝 Add Your Birthday Wish 💝</h2>
+                <div class="birthday-person-name" id="displayBirthdayName"></div>
+                
+                <form id="contributeForm">
+                    <div class="form-group">
+                        <label>✏️ Your Name</label>
+                        <input type="text" id="contributorName" placeholder="Your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>💌 Your Birthday Message</label>
+                        <textarea id="birthdayMessage" placeholder="Write a heartfelt birthday wish..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        🎉 Submit Your Wish 🎉
+                    </button>
+                </form>
+
+                <div id="contributionSuccess" class="hidden"></div>
+            </div>
+
+            <!-- Reveal Section (Birthday Person) -->
+            <div class="reveal-section" id="revealSection">
+                <div class="secret-question">
+                    <h2>🎂 Is Today Your Birthday? 🎂</h2>
+                    <p>Your friends have prepared something special for you!</p>
+                    <div class="btn-group">
+                        <button class="btn btn-yes" onclick="revealSurprise(true)">
+                            🎊 Yes, it's my birthday! 🎊
+                        </button>
+                        <button class="btn btn-no" onclick="revealSurprise(false)">
+                            Not yet 😊
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Display -->
+            <div class="messages-container" id="messagesContainer">
+                <h2 style="text-align: center; color: var(--purple); font-size: 2.5rem; margin-bottom: 30px;">
+                    🎉 Happy Birthday! 🎉
+                </h2>
+                <div class="birthday-person-name" id="revealBirthdayName"></div>
+                <p style="text-align: center; color: #666; font-size: 1.2rem; margin-bottom: 40px;">
+                    Your friends have sent you these special wishes! ❤️
+                </p>
+                <div id="messagesList"></div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div class="admin-section" id="adminSection">
+                <div id="adminLogin">
+                    <h2 style="text-align: center; color: var(--purple); margin-bottom: 20px;">
+                        🔐 Admin Panel
+                    </h2>
+                    <div class="form-group">
+                        <label>Enter Password</label>
+                        <input type="password" id="adminPassword" placeholder="Password: king">
+                    </div>
+                    <button class="btn btn-primary" onclick="adminLogin()">
+                        Login
+                    </button>
+                </div>
+
+                <div id="adminDashboard" class="hidden">
+                    <div class="admin-panel">
+                        <h3>📊 Surprise Statistics</h3>
+                        <div class="stats" id="statsDisplay"></div>
+                    </div>
+
+                    <!-- Video Upload Section for Admin -->
+                    <div class="admin-panel" style="margin-top: 20px;">
+                        <h3>🎬 Upload Birthday Video</h3>
+                        <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                            This video will play when the birthday person clicks "Yes, it's my birthday!"
+                        </p>
+                        <div class="form-group">
+                            <div class="file-upload" onclick="document.getElementById('adminVideoUpload').click()">
+                                <div class="file-icon">🎥</div>
+                                <div class="file-text" id="adminUploadText">
+                                    Click to upload birthday video<br>
+                                    <small>(MP4, MOV, AVI - Max 50MB)</small>
+                                </div>
+                                <input type="file" id="adminVideoUpload" accept="video/*" onchange="handleAdminVideoUpload(event)">
+                            </div>
+                            <div id="adminVideoPreview" class="file-preview"></div>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveAdminVideo()" id="saveVideoBtn" style="display: none;">
+                            💾 Save Video
+                        </button>
+                    </div>
+
+                    <h3 style="color: var(--purple); margin: 30px 0 20px;">All Contributions:</h3>
+                    <div id="adminMessagesList"></div>
+                    <button class="btn btn-primary" style="background: linear-gradient(135deg, #f093fb, #f5576c); margin-top: 20px;" onclick="adminLogout()">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer with IKER Branding -->
+        <div class="footer">
+            Made with joy for amazing celebrations!
+            <span class="footer-branding">Created by IKER</span>
+        </div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
